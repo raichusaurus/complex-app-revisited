@@ -5,6 +5,26 @@ let User = function(data) {
     this.errors = []
 }
 
+User.prototype.cleanUp = function() {
+
+    if (typeof(this.data.email) != "string") {
+        this.data.email = ""
+    }
+    if (typeof(this.data.username) != "string") {
+        this.data.username = ""
+    }
+    if (typeof(this.data.password) != "string") {
+        this.data.password = ""
+    }
+
+    // get rid of any bogus properties
+    this.data = {
+        username: this.data.email.trim().toLowerCase(),
+        email: this.data.username.trim().toLowerCase(),
+        password: this.data.password
+    }
+}
+
 User.prototype.validate = function() {
 
     if (!validator.isEmail(this.data.email)) {
@@ -36,6 +56,7 @@ User.prototype.validate = function() {
 User.prototype.register = function() {
 
     // 1. validate user data
+    this.cleanUp()
     this.validate()
 
     // 2. only if there are no validation errors
