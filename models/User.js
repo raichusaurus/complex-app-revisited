@@ -1,3 +1,4 @@
+const usersCollection = require('../db').collection('users')
 const validator = require('validator')
 
 let User = function(data) {
@@ -7,20 +8,14 @@ let User = function(data) {
 
 User.prototype.cleanUp = function() {
 
-    if (typeof(this.data.email) != "string") {
-        this.data.email = ""
-    }
-    if (typeof(this.data.username) != "string") {
-        this.data.username = ""
-    }
-    if (typeof(this.data.password) != "string") {
-        this.data.password = ""
-    }
+    this.data.email = ensureElementIsString(this.data.email)
+    this.data.username = ensureElementIsString(this.data.username)
+    this.data.password = ensureElementIsString(this.data.password)
 
     // get rid of any bogus properties
     this.data = {
-        username: this.data.email.trim().toLowerCase(),
-        email: this.data.username.trim().toLowerCase(),
+        username: this.data.username.trim().toLowerCase(),
+        email: this.data.email.trim().toLowerCase(),
         password: this.data.password
     }
 }
@@ -61,6 +56,16 @@ User.prototype.register = function() {
 
     // 2. only if there are no validation errors
     // then save the data into a database
+    if (!this.errors.length) {
+        usersCollection.insertOne(this.data)
+    }
+}
+
+function ensureElementIsString(element) {
+    if (typeof(element) != "string") {
+        return ""
+    }
+    return element
 }
 
 module.exports = User
