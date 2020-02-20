@@ -24,10 +24,18 @@ class User {
     }
 
     validate() {
+        this.validateEmail()
+        this.validateUsername()
+        this.validatePassword()
+    }
 
+    validateEmail() {
         if (!validator.isEmail(this.data.email)) {
             this.errors.push("You must provide a valid email address.")
         }
+    }
+
+    validateUsername() {
         if (this.data.username == "") {
             this.errors.push("You must provide a username.")
         }
@@ -40,6 +48,9 @@ class User {
         if (this.data.username.length > 30) {
             this.errors.push("Password cannot exceed 30 characters.")
         }
+    }
+
+    validatePassword() {
         if (this.data.password == "") {
             this.errors.push("You must provide a username.")
         }
