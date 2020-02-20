@@ -10,7 +10,7 @@ class User {
     }
 
     cleanUp() {
-
+        
         this.data.email = this.ensureElementIsString(this.data.email)
         this.data.username = this.ensureElementIsString(this.data.username)
         this.data.password = this.ensureElementIsString(this.data.password)
@@ -42,24 +42,14 @@ class User {
         if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) {
             this.errors.push("Username can only contains letters and numbers.")
         }
-        if (this.data.username.length > 0 && this.data.username.length < 3) {
-            this.errors.push("Username must be at least 3 characters.")
-        }
-        if (this.data.username.length > 30) {
-            this.errors.push("Password cannot exceed 30 characters.")
-        }
+        this.validateLength(this.data.password, 3, 30, "Username")
     }
 
     validatePassword() {
         if (this.data.password == "") {
             this.errors.push("You must provide a username.")
         }
-        if (this.data.password.length > 0 && this.data.password.length < 12) {
-            this.errors.push("Password must be at least 12 characters.")
-        }
-        if (this.data.password.length > 100) {
-            this.error.push("Password cannot exceed 100 characters.")
-        }
+        this.validateLength(this.data.password, 12, 100, "Password")
     }
 
     register() {
@@ -80,6 +70,15 @@ class User {
             return ""
         }
         return element
+    }
+
+    validateLength(value, minLength, maxLength, ) {
+        if (value.length > 0 && value.length < minLength) {
+            this.errors.push(`${} must be at least ${minLength} characters.`)
+        }
+        if (value.length > maxLength) {
+            this.errors.push(`${} cannot exceed ${maxLength} characters.`)
+        }
     }
 }
 
