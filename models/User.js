@@ -72,12 +72,12 @@ class User {
         return element
     }
 
-    validateLength(value, minLength, maxLength, ) {
+    validateLength(value, minLength, maxLength, name) {
         if (value.length > 0 && value.length < minLength) {
-            this.errors.push(`${} must be at least ${minLength} characters.`)
+            this.errors.push(`${name} must be at least ${minLength} characters.`)
         }
         if (value.length > maxLength) {
-            this.errors.push(`${} cannot exceed ${maxLength} characters.`)
+            this.errors.push(`${name} cannot exceed ${maxLength} characters.`)
         }
     }
 }
