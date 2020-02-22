@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs')
 const usersCollection = require('../db').collection('users')
 const validator = require('validator')
 
@@ -49,7 +50,7 @@ class User {
         if (this.data.password == "") {
             this.errors.push("You must provide a username.")
         }
-        this.validateLength(this.data.password, 12, 100, "Password")
+        this.validateLength(this.data.password, 12, 50, "Password")
     }
 
     register() {
@@ -61,6 +62,10 @@ class User {
         // 2. only if there are no validation errors
         // then save the data into a database
         if (!this.errors.length) {
+            // hash user password
+            let salt = bcrypt.genSaltSync()
+            this.data.password = bcrypt.hashSync(this.data.password, salt)
+
             usersCollection.insertOne(this.data)
         }
     }
@@ -70,7 +75,7 @@ class User {
             this.cleanUp()
             usersCollection.findOne({username: this.data.username})
                 .then((attemptedUser) => {
-                    if (attemptedUser && attemptedUser.password == this.data.password) {
+                    if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
                         resolve('Congrats')
                     }
                     else {
